@@ -1,9 +1,8 @@
 local Game = {}
 
-function Game.init ()
-  
+function Game.load()
 end
 
-function Game.update (dt)
+function Game.update()
+end
 
-return Game
