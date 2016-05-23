@@ -1,6 +1,6 @@
 -- A small file managing module to export and import data
 
-FileHandler = {}
+local FileHandler = {}
 
 -- writes a file named file with data
 function FileHandler.export (file, data)

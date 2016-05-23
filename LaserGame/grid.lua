@@ -1,24 +1,23 @@
-local Game = {}
+-- inherits from Matrix
+local Grid = require("matrix"):new()
 
-function Game.load()
-  Game.grid = Matrix:new{w = 5, h = 5}
-  
-  -- {string name, string mType, string north, string east, string south, string west, num x, num y, function draw(px, py, ps), num index}
-  Game.mirrors = require 'mirrors'
+function Grid:new (o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  return o
 end
 
--- function to iterate through all 20 edges and get their paths, populates the paths list
-function Game.calculateAllPaths (grid)
-  paths = {}
-  for i = 1, 20 do  -- a path per edge
+function Grid:calculatePaths ()
+  local paths = {}
+  for i = 1, self:perimeter() do  -- a path per edge
     paths[i] = {}
-    calculatePath(i, paths, nil, edgeToCoord(i))    -- can have multiple paths for one edge
+    self:calculatePath(i, paths, nil, edgeToCoord(i))    -- can have multiple paths for one edge
   end
   return paths
 end
 
--- populates the path matrix with all paths' origin and endpoint
-function calculatePath (origin, paths, color, startx, starty, dir)
+function Grid:calculatePath (edge, paths, color, startx, starty, dir)
   local cx, cy = startx, starty
   local cdir = dir
   local ccolor = color or {0, 0, 0}
@@ -31,7 +30,7 @@ function calculatePath (origin, paths, color, startx, starty, dir)
       return                                -- if it's an edge, terminate the path
     end
 
-    local mirror = laserMap:get(cx, cy)    -- gets the mirror at the space
+    local mirror = self:get(cx, cy)    -- gets the mirror at the space
     if mirror then
       cdir, ccolor = checkMirror(mirror, cdir, ccolor)    -- gets the mirror if there is one
       if cdir == "splitns" then                        -- if north/south splitter
@@ -47,8 +46,7 @@ function calculatePath (origin, paths, color, startx, starty, dir)
     end  -- end if mirror, continue loop
   end  -- end for loop
   table.insert(paths[origin], "loop")      -- if it's stuck in a loop, terminate the path
-end   -- end calculatePath()
+end
 
 
-
-return Game
+return Grid

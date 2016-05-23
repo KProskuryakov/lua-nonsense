@@ -4,10 +4,7 @@ function love.load (arg)
   FileHandler = require 'filehandler'                               -- get the custom file handling mudule for imports and exports
   love.graphics.setBackgroundColor(200, 200, 200)                   -- sets the background color
 
-  windowWidth, windowHeight = love.window.getMode()                 -- keeps the window size
-
-  -- {string name, string mType, string north, string east, string south, string west, num x, num y, function draw(px, py, ps), num index}
-  mirrors = require 'mirrors'
+  WindowWidth, WindowHeight = love.window.getMode()                 -- keeps the window size
 
   tilesize = 50             -- pixel width/height of each tile
   
