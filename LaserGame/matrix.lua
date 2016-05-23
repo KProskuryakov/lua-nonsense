@@ -38,8 +38,6 @@ function matrix:removeAt (x, y)
   return o
 end
 
-function matrix:removeObj (o)
-  for element in pairs(self)
 
 function matrix:perimeter ()
   return self.w * 2 + self.h  * 2

@@ -74,16 +74,25 @@ local mirrors = {       -- list of mirrors available to use
     end
   },
   
-  {name = "green", mType = "color", red = 0, green = 255, blue = 0, x = nil, y = nil,
+  green = {
     draw = function (px, py, ps)
       love.graphics.setColor(0, 255, 0, 255)
       love.graphics.circle("fill", px + ps/2, py + ps/2, ps/4, 10)
-    end},
-  {name = "red", mType = "color", red = 255, green = 0, blue = 0, x = nil, y = nil,
+    end,
+    processLaser = function (direction, color)
+      return direction, {color[1], green, color[3]}
+    end
+  },
+  
+  red = {
     draw = function (px, py, ps)
       love.graphics.setColor(255, 0, 0, 255)
       love.graphics.circle("fill", px + ps/2, py + ps/2, ps/4, 10)
-    end}
+    end,
+    processLaser = function (direction, color)
+      return direction, {255, color[2], color[3]}
+    end
+  }
 }
   
 for i, v in ipairs(mirrors) do  -- so that the mirrors know where they are in the mirrors[] table
