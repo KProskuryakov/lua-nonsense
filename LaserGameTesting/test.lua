@@ -34,7 +34,7 @@ function Test:runTests ()
   local failedTestsList = {}
   print("Starting " .. self.name .. " tests")
   for f, t in pairs(self.functions) do
-    print("Test method: " .. m)
+    print("Test function: " .. f)
     for k, v in ipairs(t) do
       testsRun = testsRun + 1
       if v.result then
@@ -54,13 +54,41 @@ function Test:runTests ()
   end
 end
 
-function Test:equalsMargin(val1, val2, margin)
+function Test:equalsMargin (val1, val2, margin)
   margin = margin or 0
   self:addTest(val1, val2, val1 <= val2 + margin and val1 >= val2 - margin, "EqualsMargin")
 end
 
-function Test:equals(val1, val2)
+function Test:equals (val1, val2)
   self:addTest(val1, val2, val1 == val2, "Equals")
+end
+
+function Test:greater (val1, val2)
+  self:addTest(val1, val2, val1 > val2, "Greater")
+end
+
+function Test:greaterOrEqual (val1, val2)
+  self:addTest(val1, val2, val1 >= val2, "GreaterOrEqual")
+end
+
+function Test:lesser (val1, val2)
+  self:addTest(val1, val2, val1 < val2, "Lesser")
+end
+
+function Test:lesserOrEqual (val1, val2)
+  self:addTest(val1, val2, val1 <= val2, "LesserOrEqual")
+end
+
+function Test:notEqual (val1, val2)
+  self:addTest(val1, val2, val1 ~= val2, "NotEqual")
+end
+
+function Test:notNil (val)
+  self:addTest(val, nil, val ~= nil,  "NotNil")
+end
+
+function Test:isNil (val)
+  self:addTest(val, nil, val == nil, "isNil")
 end
 
 return Test

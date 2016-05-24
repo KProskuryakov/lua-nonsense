@@ -48,5 +48,4 @@ function Grid:calculatePath (edge, paths, color, startx, starty, dir)
   table.insert(paths[origin], "loop")      -- if it's stuck in a loop, terminate the path
 end
 
-
 return Grid
