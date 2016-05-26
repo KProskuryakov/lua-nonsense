@@ -1,0 +1,8 @@
+Starting default tests
+Test function: TestFunction1
+Test 1: Passed
+Test 2: Failed
+Passed: 1/2
+Failed: 1
+
+TestFunction1 Test #2 Equals || Inputs: 4, 5
