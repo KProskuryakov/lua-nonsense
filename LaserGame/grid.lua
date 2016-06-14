@@ -1,5 +1,6 @@
 -- inherits from Matrix
 local Grid = require("matrix"):new()
+local colors = require("colors")
 
 function Grid:new (o)
   o = o or {}

@@ -1,0 +1,17 @@
+Structure:
+  Main: hosts the callback methods and handles the game/menu state
+    love.load(arg): runs once upon game startup
+    love.update(dt): runs every frame
+    love.draw(): draws stuff on the window every frame
+  Grid extends Matrix:
+    calculatePaths (): returns a paths object that contains all of the laser starts/finishes and the color
+  Matrix: base matrix module for manipulating a 2d matrix (no math, just adding/removing)
+    new{w=int, h=int, elements={}}
+    get(i, j)
+    set(i, j, o)
+    remove(i, j)
+    perimeter()
+    convertij(i, j): convert i,j into k
+    convertk(k): convert k into i,j
+  Colors: 
+    getColor(color): returns the name of the color

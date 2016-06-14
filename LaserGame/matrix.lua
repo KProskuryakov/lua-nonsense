@@ -6,7 +6,7 @@ function matrix:new (o)
   o = o or {}
   o.w = o.w or 10
   o.h = o.h or 10
-  o.elements = {}
+  o.elements = o.elements or {}
   setmetatable(o, self)
   self.__index = self
   return o
@@ -18,8 +18,8 @@ function matrix:get (i, j)
   return self.elements[self:convertij(i, j, self.w)]
 end
 
--- puts o into the m matrix at position x, y
-function matrix:put (i, j, o)
+-- puts o into elements at position x, y
+function matrix:set (i, j, o)
   self.elements[self:convertij(i, j, self.w)] = o
 end
 
