@@ -16,5 +16,4 @@ Structure:
   Colors: 
     getColor(color): returns the name of the color
     
-    
-    Derp
+  
