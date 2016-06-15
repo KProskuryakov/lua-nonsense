@@ -15,6 +15,3 @@ Structure:
     convertk(k): convert k into i,j
   Colors: 
     getColor(color): returns the name of the color
-    
-    
-    Derp
