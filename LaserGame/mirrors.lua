@@ -94,5 +94,9 @@ local mirrors = {       -- list of mirrors available to use
     end
   }
 }
+  
+for i, v in ipairs(mirrors) do  -- so that the mirrors know where they are in the mirrors[] table
+  v.index = i
+end
 
 return mirrors

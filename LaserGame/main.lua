@@ -230,6 +230,48 @@ function love.quit ()   -- some debug info
   printPaths(paths)
 end
 
+-- function to iterate through all 20 edges and get their paths, populates the paths list
+function calculateAllPaths ()
+  paths = {}
+  for i = 1, 20 do  -- a path per edge
+    paths[i] = {}
+    calculatePath(i, paths, nil, edgeToCoord(i))    -- can have multiple paths for one edge
+  end
+  return paths
+end
+
+-- populates the path matrix with all paths' origin and endpoint
+function calculatePath (origin, paths, color, startx, starty, dir)
+  local cx, cy = startx, starty
+  local cdir = dir
+  local ccolor = color or {0, 0, 0}
+
+  for i = 1, 100 do
+    cx, cy = nextSpace(cx, cy, cdir)        -- gets the next space
+    local edge = checkEdge(cx, cy)          -- checks if the space is an edge
+    if edge then
+      table.insert(paths[origin], edge .. " " .. colorToString(ccolor))
+      return                                -- if it's an edge, terminate the path
+    end
+
+    local mirror = laserMap:get(cx, cy)    -- gets the mirror at the space
+    if mirror then
+      cdir, ccolor = checkMirror(mirror, cdir, ccolor)    -- gets the mirror if there is one
+      if cdir == "splitns" then                        -- if north/south splitter
+        cdir = "north"                                -- this path continues north
+        calculatePath(origin, paths, ccolor, cx, cy, "south")     -- calculate the path going south
+      elseif cdir == "splitew" then                   -- if east/west splitter
+        cdir = "east"                               -- this path continues east
+        calculatePath(origin, paths, ccolor, cx, cy, "west")      -- calculate the path going west
+      elseif cdir == "none" then                  -- if terminator
+        table.insert(paths[origin], "end")      -- end the path
+        return
+      end
+    end  -- end if mirror, continue loop
+  end  -- end for loop
+  table.insert(paths[origin], "loop")      -- if it's stuck in a loop, terminate the path
+end   -- end calculatePath()
+
 -- populates the drawPath matrix with the path that needs to be drawn from an origin
 function calculateDrawPath (origin, color, startx, starty, dir)
   local cx, cy = startx, starty         -- starts at an edge or a split point
@@ -271,7 +313,15 @@ function calculateDrawPath (origin, color, startx, starty, dir)
   end
 end   -- calculateDrawPath()
 
-
+-- checks the mirror (whether it's a mirror or color switch) and returns the new direction and color based on the mirror
+function checkMirror (mirror, cdir, ccolor)
+  if mirror.mType == "mirror" then
+    return mirror[cdir], ccolor
+  elseif mirror.mType == "color" then
+    return cdir, {math.min(ccolor[1] + mirror.red, 255), math.min(ccolor[2] + mirror.green, 255), math.min(ccolor[3] + mirror.blue, 255)}
+  end
+  return cdir, ccolor
+end 
 
 -- places mirror at specified x, y if it's empty
 function placeMirror (i, x, y)
@@ -285,9 +335,33 @@ function placeMirror (i, x, y)
   end
 end
 
+-- checks whether the coordinate is an edge, returns the edge number and returns nil if not
+function checkEdge (x, y)
+  if y == 0 then
+    return x
+  elseif x == 6 then
+    return 5 + y
+  elseif y == 6 then
+    return 16 - x
+  elseif x == 0 then
+    return 21 - y
+  else
+    return nil
+  end
+end
 
-
-
+-- converts the edge number to a coordinate on the grid (only 1-20)
+function edgeToCoord (e)
+  if e < 6 then
+    return e, 0, "south"
+  elseif e < 11 then
+    return 6, e - 5, "west"
+  elseif e < 16 then
+    return 6 - e + 10, 6, "north"
+  elseif e < 21 then
+    return 0, 6 - e + 15, "east"
+  end
+end
 
 -- returns the next space given the direction
 function nextSpace (x, y, dir)
@@ -317,8 +391,86 @@ function printPaths (paths)
   end
 end
 
+function resultsToString (paths)
+  returnString = ""
+  for i = 1, 20 do
+    if #paths[i] > 1 then
+      returnString = returnString .. i .. " -> {"
+      for j = 1, #paths[i] - 1 do
+        returnString = returnString .. paths[i][j] .. ", "
+      end
+      returnString = returnString .. paths[i][#paths[i]] .. "}\n"
+    else
+      io.write(i, " -> ", paths[i][1],"\n")
+      returnString = returnString .. i .. " -> " .. paths[i][1] .. "\n"
+    end
+  end
+  return returnString
+end
+
+function colorToString (color)
+  if color[1] == 0 then
+    if color[2] == 0 then
+      if color[3] == 0 then
+        return "black"
+      else
+        return "blue"
+      end
+    else
+      if color[3] == 0 then
+        return "green"
+      else
+        return "cyan"
+      end
+    end
+  else
+    if color[2] == 0 then
+      if color[3] == 0 then
+        return "red"
+      else
+        return "magenta"
+      end
+    else
+      if color[3] == 0 then
+        return "yellow"
+      else
+        return "white"
+      end
+    end
+  end
+end
+
+-- returns the opposite direction
+function getOppositeDirection (dir)
+  if dir == "north" then
+    return "south"
+  elseif dir == "west" then
+    return "east"
+  elseif dir == "east" then
+    return "west"
+  elseif dir == "south" then
+    return "north"
+  end
+  return "none"
+end
+
 -- returns the tile to which a pixel corresponds to (x and y individually)
 function pixelToTile (p, offset, size)
   local po = p - offset
   return (p - p % size) / size
+end
+
+-- converts the laser grid into string format for exporting
+function laserGridToString ()
+  local dataString = ""
+  for i = 1, 25 do
+    local mirror = laserMap:get(i)
+    if mirror then
+      dataString = dataString .. laserMap:get(i).index .. "\n"
+      io.write("WOW")
+    else
+      dataString = dataString .. "\n"
+    end
+  end
+  return dataString
 end
