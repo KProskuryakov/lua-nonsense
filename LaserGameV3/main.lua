@@ -30,7 +30,6 @@ function love.load ()
   window.width, window.height = love.window.getMode()                 -- keeps the window size
   window.tilesize = 50
   window.uiGrid = {x = 0, y = 0, tileWidth = 7, tileHeight = 7}
-  function window.uiGrid.processMouseInput (x, y, event, button) end
   window.uiToolbar = {x = 0, y = 500, tileWidth = 8, tileHeight = 1}
   window.components = {uiGrid, uiToolbar}
 
@@ -203,6 +202,10 @@ function window.processMouseInput (x, y, event, button)
       return
     end
   end
+end
+
+function window.uiGrid.processMouseInput (x, y, event, button) 
+
 end
 
 function window.contains (x, y, component)
