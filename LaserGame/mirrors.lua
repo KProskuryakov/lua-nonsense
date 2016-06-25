@@ -64,7 +64,7 @@ local mirrors = {       -- list of mirrors available to use
     end
   },
 
-  blue = {
+  Blue = {
     draw = function (px, py, ps)
       love.graphics.setColor(0, 0, 255, 255)
       love.graphics.circle("fill", px + ps/2, py + ps/2, ps/4, 10)
@@ -74,7 +74,7 @@ local mirrors = {       -- list of mirrors available to use
     end
   },
   
-  green = {
+  Green = {
     draw = function (px, py, ps)
       love.graphics.setColor(0, 255, 0, 255)
       love.graphics.circle("fill", px + ps/2, py + ps/2, ps/4, 10)
@@ -84,7 +84,7 @@ local mirrors = {       -- list of mirrors available to use
     end
   },
   
-  red = {
+  Red = {
     draw = function (px, py, ps)
       love.graphics.setColor(255, 0, 0, 255)
       love.graphics.circle("fill", px + ps/2, py + ps/2, ps/4, 10)
